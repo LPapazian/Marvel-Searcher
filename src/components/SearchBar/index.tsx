@@ -6,7 +6,13 @@ import logo from "./marvelLogo.png";
 export default function SearchBar() {
   const appContext = useContext(MarvelContext);
 
-  const { handleSearchChange, handleSubmit } = appContext;
+  const { handleSubmit } = appContext;
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      handleSubmit(event.target.value);
+    }
+  };
 
   return (
     <div className={styles.searchbar}>
@@ -19,6 +25,7 @@ export default function SearchBar() {
           className={styles.searchField}
           type="search"
           placeholder="Buscar"
+          onKeyPress={handleKeyDown}
         />
       </div>
     </div>
