@@ -1,20 +1,18 @@
 import React, { useContext } from "react";
-import "./App.scss";
 import { MarvelContext } from "./context";
 import SearchBar from "./components/SearchBar";
+import HomePage from "./components/HomePage";
+import Loader from "./components/Loader";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   const appContext = useContext(MarvelContext);
+  const { loading, error } = appContext;
 
-  const { loading, search } = appContext;
   return (
-    <div className="App">
+    <div>
       <SearchBar />
-      {loading ? (
-        <h1 className="text-center">...fetching {search} recipe</h1>
-      ) : (
-        <h1> Listop </h1>
-      )}
+      {loading ? <Loader /> : error ? <ErrorPage /> : <HomePage />}
     </div>
   );
 }
