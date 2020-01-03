@@ -1,51 +1,56 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { HeroItem } from "../interfaces/interfaces";
 
 const MarvelContext = React.createContext({} as IContext);
 
 const MarvelProvider = (props: any) => {
-  let url =
-    "https://gateway.marvel.com/v1/public/characters?ts=1577481119617&apikey=e6871287b12aa63cc9058635a5a85069&hash=dbba76a4f4cf9fed1e4407baeeeb7f23";
-  const [heroes, setHeroes] = useState([]);
+  const timestamp = "1";
+  const publicKey = "efbb5198852f1e462c92d96098902a8a";
+  const hash = "f679d3aebd0874f5f0e737460d1c729c";
+
+  let url = `https://gateway.marvel.com/v1/public/characters?ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
+  const [heroes, setHeroes] = React.useState<HeroItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [hero, setHero] = useState([]);
+  const [error, setError] = useState(false);
 
   const fetchAllHeroes = () => {
-    setLoading(false);
-
-    // axios
-    //   .get(url)
-    //   .then((res: any) => {
-    //     setHeroes(res.data.results);
-    //     setLoading(false);
-    //   })
-    //   .catch((error: any) => {
-    //     console.log("Try again later.");
-    //   });
-  };
-
-  const handleSubmit = (e: React.MouseEvent) => {
+    let marvelUrl = url;
     setLoading(true);
-    e.preventDefault();
-    const searchUrl = `${url}&name=${search}`;
+    setError(false);
     axios
-      .get(searchUrl)
+      .get(marvelUrl)
       .then((res: any) => {
-        setHero(res.data.results);
+        let heroes: HeroItem[] = res.data.data.results;
+        setHeroes(heroes);
         setLoading(false);
       })
       .catch((error: any) => {
-        console.log("Try again later.");
+        console.log(`Try again later. Error was: ${error}`);
+        setError(true);
       });
   };
 
-  const handleSearchChange = (e: any) => {
-    setSearch(e.target.value);
+  const handleSubmit = (param: string) => {
+    setLoading(true);
+    setError(false);
+    const searchUrl = param ? `${url}&name=${param}` : url;
+    axios
+      .get(searchUrl)
+      .then((res: any) => {
+        let heroes: HeroItem[] = res.data.data.results;
+        setHeroes(heroes);
+        setLoading(false);
+      })
+      .catch((error: any) => {
+        console.log(`Try again later. Error was: ${error}`);
+        setError(true);
+      });
   };
 
   useEffect(() => {
     fetchAllHeroes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -53,10 +58,8 @@ const MarvelProvider = (props: any) => {
       value={{
         heroes,
         loading,
-        search,
-        hero,
         handleSubmit,
-        handleSearchChange
+        error
       }}
     >
       {props.children}
@@ -65,12 +68,10 @@ const MarvelProvider = (props: any) => {
 };
 
 interface IContext {
-  heroes: any[];
-  hero: any[];
+  heroes: HeroItem[];
   loading: boolean;
-  search: string;
   handleSubmit: any;
-  handleSearchChange: any;
+  error: boolean;
 }
 
 export { MarvelProvider, MarvelContext };
