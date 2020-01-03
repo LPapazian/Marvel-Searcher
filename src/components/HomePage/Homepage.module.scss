@@ -1,0 +1,20 @@
+$break-small: 320px;
+$break-medium: 768px;
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: auto;
+  column-gap: 50px;
+  padding: 20px;
+  @media screen and (min-width: $break-small) {
+    grid-template-columns: auto auto;
+  }
+  @media screen and (min-width: $break-medium) {
+    grid-template-columns: auto auto auto auto;
+  }
+}
+
+.errorPage {
+  padding: 20px;
+  text-align: center;
+}
