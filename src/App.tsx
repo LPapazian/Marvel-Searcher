@@ -4,6 +4,7 @@ import SearchBar from "./components/SearchBar";
 import HomePage from "./components/HomePage";
 import Loader from "./components/Loader";
 import ErrorPage from "./components/ErrorPage";
+import "fontsource-roboto";
 
 function App() {
   const appContext = useContext(MarvelContext);
